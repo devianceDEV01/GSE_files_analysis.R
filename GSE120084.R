@@ -3,7 +3,7 @@ library(tidyverse)
 library(dplyr)
 library(ggplot2)
 library(ggridges)
-setwd('/home/amp_prog/Desktop/hope_model/GSE120084_CARm_m1_m2')
+setwd('')
 matrix<-read.delim('GSE120084_Raw_read_counts_PhenoMap.txt.gz')
 row.names(matrix)<-make.names(matrix$GeneID,unique = TRUE)
 matrix<-matrix[,-1]

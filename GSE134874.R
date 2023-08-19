@@ -4,7 +4,7 @@ library(dplyr)
 library(ggplot2)
 library(ggridges)
 #-------------------------------------------------------------------------------
-setwd('/home/amp_prog/Desktop/hope_model/GSE134874_PRR_stims')
+setwd('')
 matrix <- read.delim('GSE134874_Human_umi_counts.tsv')
 row.names(matrix) <- make.names(matrix$X,unique = TRUE)
 matrix <-matrix[,-c(1)]

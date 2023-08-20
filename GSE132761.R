@@ -3,7 +3,7 @@ library(tidyverse)
 library(dplyr)
 library(ggplot2)
 library(ggridges)
-setwd('/home/amp_prog/Desktop/TAM_manuscript/GSE132761_CD4.IL6')
+setwd()
 matrix<-read.csv('GSE132761_RNAseq_rawcounts.csv')
 row.names(matrix)<-make.names(matrix$Gene,unique = TRUE)
 matrix<-matrix[,-1]

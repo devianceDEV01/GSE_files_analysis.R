@@ -9,7 +9,7 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd('/home/amp_prog/Desktop/TAM_manuscript/datasets/GSE237779_immune.cells_GBM')
+setwd()
 data<-read_rds('GSE237779_integrated_seurat_object_CD45_scRNAseq.rds')
 #----------Isolate CD45+  -------------------------------------
 data$CD45.groups <- 'CD45.pos'
@@ -80,8 +80,8 @@ logLik(model)
 caret::confusionMatrix(pred_factor, actual,positive='1')
 table(data@meta.data$integrated_celltype)
 table(test$ident)
-cat('Gene panel is highest in mono/macrophage subsets')
 break 
+#----------Figure 3a
 Idents(data)<-data@meta.data$integrated_celltype
 VlnPlot(data, features = c('MILR1'),pt.size=0.1,cols = c('red','grey','grey','grey','grey','grey','grey','grey','red','grey','grey','grey','grey','grey','grey','grey','grey','grey','red'))
 FindMarkers(data, ident.1 = 'Macrophage', ident.2 = 'CD4+ Tcm', features = c('MILR1'))

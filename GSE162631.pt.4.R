@@ -12,7 +12,7 @@ library(ROCR)
 setwd()
 list<-read.csv('list.csv')
 list<-list$x
-setwd()
+setwd(R4_N)
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
@@ -20,7 +20,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 x <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'peripheral')
 summary(x@active.ident)
 #---------------------------------------------------------------------------
-setwd()
+setwd(R4_T)
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'

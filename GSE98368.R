@@ -32,8 +32,9 @@ data <- RunPCA(data,npcs = 11, features = VariableFeatures(object = data))
 DimHeatmap(data, dims = 1:3, cells = 500, balanced = T)
 ElbowPlot(data)
 data
-DimPlot(data, reduction = "pca", pt.size = 7)
-#------------Figure 2h
-VlnPlot(data, features = c('MRC1','DDX58','IFIH1','DHX58','SEC14L1','CD274','PDCD1LG2','IL1B','IL6','IL6ST','NFKB1'), cols = c('red','grey'))
-FindMarkers(data, ident.1 = 'IFNG+', ident.2 = 'resting', features = c('MRC1','DDX58','IFIH1','DHX58','SEC14L1','CD274','PDCD1LG2','IL1B','IL6','IL6ST','NFKB1'))
-break
+DimPlot(data, reduction = "pca", pt.size = 2)
+#------------Figure 2g
+VlnPlot(data, features = c('MRC1','DDX58','IFIH1','DHX58','NFKB1','CD274','PDCD1LG2','IL6ST','MILR1'), cols = c('red','grey'))
+FindMarkers(data, ident.1 = 'IFNG+', ident.2 = 'resting', features = c('MRC1','DDX58','IFIH1','DHX58','NFKB1','CD274','PDCD1LG2','IL6ST','MILR1'))
+
+

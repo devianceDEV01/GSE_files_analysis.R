@@ -10,8 +10,6 @@ library(InformationValue)
 library(pROC)
 library(ROCR)
 setwd()
-list<-read.csv('list.csv')
-list<-list$x
 setwd(R2_N)
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'

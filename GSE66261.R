@@ -36,9 +36,14 @@ gc()
 data <- RunPCA(data, npcs=7,features = VariableFeatures(object = data))
 DimHeatmap(data, dims = 1:7, cells = 500, balanced = T)
 ElbowPlot(data)
-DimPlot(data, reduction = "pca", pt.size = 7, label = FALSE)
+DimPlot(data, reduction = "pca", pt.size = 2, label = FALSE)
 gc()
-#Figure 2e
-VlnPlot(data,features = c('TBX21','PDCD1','IFNG','TNF','DDX58','IFIH1','DHX58','SEC14L1','NFKB1'),idents = c(),cols = c('orange','grey'))
-FindMarkers(data, ident.1 = 'IL12+', ident.2 = 'IL4+', features = c('TBX21','PDCD1','IFNG','TNF','DDX58','IFIH1','DHX58','SEC14L1','NFKB1'))
 break 
+#Figure 2e
+VlnPlot(data,features = c('TBX21','CD8B','PDCD1','IFNG','TNF','DDX58','IFIH1','DHX58','NFKB1'),idents = c(),cols = c('orange','grey'))
+FindMarkers(data, ident.1 = 'IL12+', ident.2 = 'IL4+', features = c('TBX21','CD8B','PDCD1','IFNG','TNF','DDX58','IFIH1','DHX58','NFKB1'))
+#Figure 2k 
+VlnPlot(data,features = c('GATA3','IL4','IL13','CSF1','DDX58','IFIH1','DHX58','SEC14L1','NFKB1'),idents = c(),cols = c('grey','green'))
+FindMarkers(data, ident.1 = 'IL4+', ident.2 = 'IL12+', features = c('GATA3','PDCD1','IL4','IL13','CSF1','DDX58','IFIH1','DHX58','SEC14L1','NFKB1'))
+
+

@@ -4,7 +4,7 @@ library(dplyr)
 library(ggplot2)
 library(ggridges)
 #-------------------------------------------------------------------------------
-setwd('')
+setwd('/home/amp_prog/Desktop/TAM_manuscript/datasets/GSE134874_PRR_stims')
 matrix <- read.delim('GSE134874_Human_umi_counts.tsv')
 row.names(matrix) <- make.names(matrix$X,unique = TRUE)
 matrix <-matrix[,-c(1)]
@@ -34,4 +34,7 @@ data$MILR1.groups[WhichCells(data, expression= MILR1 < 0.1)] <- 'MILR1.neg'
 head(data@meta.data)
 data <- subset(data, subset = MILR1.groups != "MILR1.neg")
 gc()
-break
+#Figure 2c
+VlnPlot(data,features = c('IFNA1','IFNB1','IL12A','IL12B','DDX58','IFIH1','DHX58','NFKB1','MILR1'),idents = c('Ctrl','LS'),cols = c('grey','skyblue'))
+FindMarkers(data, ident.1 = 'LS', ident.2 = 'Ctrl', features = c('IFNA1','IFNB1','IL12A','IL12B','DDX58','IFIH1','DHX58','NFKB1','MILR1'))
+

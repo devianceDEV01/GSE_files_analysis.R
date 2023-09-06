@@ -12,7 +12,7 @@ library(ROCR)
 setwd()
 list<-read.csv('list.csv')
 list<-list$x
-setwd('/home/amp_prog/Desktop/TAM_manuscript/datasets/GSE162631_GBM/R1_N')
+setwd()
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'

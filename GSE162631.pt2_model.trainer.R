@@ -26,7 +26,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 y <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'GBM')
 summary(y@active.ident)
 #---------------------------------------------------------------------------
-data<-merge(x,y=c(y),project='GBM.pt1')
+data<-merge(x,y=c(y),project='GBM.pt2')
 table(data@meta.data$orig.ident)
 head(data@active.ident)
 rm(x,y)

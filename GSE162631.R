@@ -9,9 +9,9 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd('/home/amp_prog/Desktop/TAM_manuscript/bulk_logistic/milr1_final')
-results<-read.csv('thyr.cerv.escc.crc.csv')
-list<-results$X
+setwd()
+list<-read.csv('list.csv')
+list<-list$x
 setwd('/home/amp_prog/Desktop/TAM_manuscript/datasets/GSE162631_GBM/R1_N')
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
@@ -114,19 +114,8 @@ table(reg$ident)
 test<-reg
 #--------------------------------------------------
 set.seed(13)
-#sample <- sample(c(TRUE, FALSE), nrow(reg), replace=TRUE, prob=c(0.5,0.5))
-#train  <- reg[sample, ]
-#table(train$ident)
-#test   <- reg[!sample, ]
-#table(test$ident)
-#----------run model
 cat(list,sep = '+')
-#---------model edit
-#model<-glm(ident~CD163+FPR3+S100A8+FBP1+CLEC5A+PLAU+IFIT3,
-#           data = train, family = binomial)
-#model<-glm(ident~PLAU+CD163+S100A9,
-#           data = train, family = binomial)
-setwd('/home/amp_prog/Desktop/TAM_manuscript/bulk_logistic/milr1_final')
+setwd()
 model<-readRDS('gbm_pt2_training.rda')
 vif(model)
 summary(model)
@@ -180,3 +169,4 @@ FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('CD163',
 #----------- Figure 4b
 fourfoldplot(as.table(confusion_matrix),color = c('grey','red',main='Confusion Matrix'))
 plot(ROC_perf,colorize=TRUE,print.cutoffs.at=seq(0.1,by=0.1),main='Patient1 ROC')
+

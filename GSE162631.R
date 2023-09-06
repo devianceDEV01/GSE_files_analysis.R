@@ -20,7 +20,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 x <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'peripheral')
 summary(x@active.ident)
 #---------------------------------------------------------------------------
-setwd('/home/amp_prog/Desktop/TAM_manuscript/datasets/GSE162631_GBM/R1_T')
+setwd()
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'

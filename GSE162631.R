@@ -169,4 +169,8 @@ FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('CD163',
 #----------- Figure 4b
 fourfoldplot(as.table(confusion_matrix),color = c('grey','red',main='Confusion Matrix'))
 plot(ROC_perf,colorize=TRUE,print.cutoffs.at=seq(0.1,by=0.1),main='Patient1 ROC')
+#---------- Figure 4c
+VlnPlot(data, features = c('DDX58','IFIH1','NFKB1'),cols = c('red','grey'))
+FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('DDX58','IFIH1','NFKB1'))
+
 

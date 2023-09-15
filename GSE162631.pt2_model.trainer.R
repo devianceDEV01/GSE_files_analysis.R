@@ -9,7 +9,7 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd('/home/amp_prog/Desktop/TAM_manuscript/datasets/GSE162631_GBM/R2_N')
+setwd('R2_N')
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
@@ -17,7 +17,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 x <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'peripheral')
 summary(x@active.ident)
 #---------------------------------------------------------------------------
-setwd('/home/amp_prog/Desktop/TAM_manuscript/datasets/GSE162631_GBM/R2_T')
+setwd('R2_T')
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
@@ -119,5 +119,5 @@ logLik(model)
 vif(model)
 #------Displaying variable importances
 varImp(model)
-setwd('/home/amp_prog/Desktop')
+setwd()
 write_rds(model,file = 'gbm_pt2_training.rda')

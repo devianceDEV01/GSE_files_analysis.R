@@ -9,8 +9,7 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd()
-setwd(R2_N)
+setwd('/home/amp_prog/Desktop/TAM_manuscript/datasets/GSE162631_GBM/R2_N')
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
@@ -18,7 +17,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 x <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'peripheral')
 summary(x@active.ident)
 #---------------------------------------------------------------------------
-setwd(R2_T)
+setwd('/home/amp_prog/Desktop/TAM_manuscript/datasets/GSE162631_GBM/R2_T')
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
@@ -26,7 +25,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 y <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'GBM')
 summary(y@active.ident)
 #---------------------------------------------------------------------------
-data<-merge(x,y=c(y),project='GBM.pt2')
+data<-merge(x,y=c(y),project='')
 table(data@meta.data$orig.ident)
 head(data@active.ident)
 rm(x,y)
@@ -97,24 +96,28 @@ data <- subset(data, subset = MILR1.groups != "MILR1.neg")
 gc()
 table(data@meta.data$orig.ident)
 VlnPlot(data, features = c('MILR1'),cols = c())
-#---------------------------------------------------------------------------
 DimPlot(data,dims = c(1,2),reduction = 'pca',cols = c(),pt.size = 0.5)
 #----split data
-reg<-FetchData(data,vars = c('ident',list),slot = 'counts')
+reg<-FetchData(data,vars = c('ident','CD163','LYZ','S100A8'),slot = 'counts')
 table(reg$ident)
 reg$ident<-ifelse(reg$ident=='GBM', 1, 0)
 table(reg$ident)
 #------Even out group numbers and shuffle
-edit<-reg[-c(4091:4996),]
+edit<-reg[-c(8351:9062),]
 table(edit$ident)
 reg<-edit[sample(1:nrow(edit)),]
 table(reg$ident)
 train<-reg
-#--------------------------------------------------
+#---------------------------------------------------------------------------
 set.seed(13)
-cat(list,sep = '+')
-model<-glm(ident~PLAU+CD163+S100A9,
+#---------model edit
+model<-glm(ident~CD163+LYZ+S100A8,
            data = train, family = binomial)
-vif(model)
 summary(model)
-model<-write_rds(model,file='gbm_pt2_training.rda')
+logLik(model)
+#------Displaying variance inflation factors
+vif(model)
+#------Displaying variable importances
+varImp(model)
+setwd('/home/amp_prog/Desktop')
+write_rds(model,file = 'gbm_pt2_training.rda')

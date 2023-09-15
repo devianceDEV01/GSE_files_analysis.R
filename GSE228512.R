@@ -9,12 +9,11 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-library(scTenifoldNet)
 setwd()
 matrix<-read.csv('GSE228512_hiseq_counts.csv')
 row.names(matrix)<-make.names(matrix$Gene,unique = TRUE)
 matrix<-matrix[,-1]
-data <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'normal')
+data <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = '')
 gc()
 data <- RenameIdents(object = data, `preop` = "GBM.EV")
 table(data@active.ident)
@@ -24,8 +23,8 @@ FeatureScatter(data, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") + geom_
 data <- NormalizeData(data)
 data <- FindVariableFeatures(data, selection.method = "vst", nfeatures = 2000)
 VariableFeatures(data)
-top10 <- head(VariableFeatures(data), 10)
-top10
+top1000 <- head(VariableFeatures(data), 1000)
+top1000
 gc()
 plot1 <- VariableFeaturePlot(data)
 plot1
@@ -40,5 +39,6 @@ DimHeatmap(data, dims = 1:15, cells = 500, balanced = T)
 ElbowPlot(data)
 gc()
 table(data@meta.data$orig.ident)
-VlnPlot(data, features = c('CD163','PLAU','S100A9'),cols = c('red','grey'))
-FindMarkers(data, ident.1 = 'GBM.EV', ident.2 = 'control', features = c('CD163','PLAU','S100A9'))
+#-----Figure 5
+VlnPlot(data, features = c('CD163','LYZ','S100A8'),cols = c('red','grey'))
+FindMarkers(data, ident.1 = 'GBM.EV', ident.2 = 'control', features = c('CD163','LYZ','S100A8'))

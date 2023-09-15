@@ -9,9 +9,6 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd()
-list<-read.csv('list.csv')
-list<-list$x
 setwd(R1_N)
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
@@ -99,10 +96,10 @@ data <- subset(data, subset = MILR1.groups != "MILR1.neg")
 gc()
 table(data@meta.data$orig.ident)
 VlnPlot(data, features = c('MILR1'),cols = c())
-#---------------------------------------------------------------------------
 DimPlot(data,dims = c(1,2),reduction = 'pca',cols = c(),pt.size = 0.5)
+set.seed(13)
 #----split data
-reg<-FetchData(data,vars = c('ident',list),slot = 'counts')
+reg<-FetchData(data,vars = c('ident','CD163','LYZ','S100A8'),slot = 'counts')
 table(reg$ident)
 reg$ident<-ifelse(reg$ident=='GBM', 1, 0)
 table(reg$ident)
@@ -112,22 +109,14 @@ table(edit$ident)
 reg<-edit[sample(1:nrow(edit)),]
 table(reg$ident)
 test<-reg
-#--------------------------------------------------
-set.seed(13)
-cat(list,sep = '+')
+#---------------------------------------------------------------------------
 setwd()
-model<-readRDS('gbm_pt2_training.rda')
-vif(model)
+model<-read_rds('gbm_pt2_training.rda')
 summary(model)
 logLik(model)
-#----------Mcfadden's pseudo R squared
-null<-model$null.deviance/-2
-resdDEV<-model$deviance/-2
-pR2<-(null-resdDEV)/null
-print(pR2)
 #------Displaying variance inflation factors
 vif(model)
-#------Displaying variable importance factors
+#------Displaying variable importances
 varImp(model)
 newdata = test
 summary(newdata)
@@ -164,13 +153,11 @@ table(data@meta.data$orig.ident)
 table(test$ident)
 break 
 #----------- Figure 4a
-VlnPlot(data, features = c('CD163','PLAU','S100A9'),cols = c('red','grey'))
-FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('CD163','PLAU','S100A9'))
+VlnPlot(data, features = c('CD163','LYZ','S100A8'),cols = c('red','grey'))
+FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('CD163','LYZ','S100A8'))
 #----------- Figure 4b
 fourfoldplot(as.table(confusion_matrix),color = c('grey','red',main='Confusion Matrix'))
 plot(ROC_perf,colorize=TRUE,print.cutoffs.at=seq(0.1,by=0.1),main='Patient1 ROC')
 #---------- Figure 4c
 VlnPlot(data, features = c('DDX58','IFIH1','NFKB1'),cols = c('red','grey'))
 FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('DDX58','IFIH1','NFKB1'))
-
-

@@ -9,7 +9,7 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd(R4_N)
+setwd('R4_N')
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
@@ -17,7 +17,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 x <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'peripheral')
 summary(x@active.ident)
 #---------------------------------------------------------------------------
-setwd(R4_T)
+setwd('R4_T')
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
@@ -144,7 +144,7 @@ head(optCutoff)
 auc(actuals,predicted)
 ROC_pred<-prediction(df$predicted,df$actuals)
 ROC_perf<-performance(ROC_pred,'tpr','fpr')
-plot(ROC_perf,colorize=TRUE,print.cutoffs.at=seq(0.1,by=0.1),main='Patient4 ROC')
+plot.roc(actuals, predicted, percent = TRUE, main = 'Validation_ROC', add =  FALSE, asp = NA, print.auc = TRUE)
 summary(model)
 logLik(model)
 confusion_matrix
@@ -155,8 +155,8 @@ break
 VlnPlot(data, features = c('CD163','LYZ','S100A8'),cols = c('red','grey'))
 FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('CD163','LYZ','S100A8'))
 #----------- Figure 4h
-fourfoldplot(as.table(confusion_matrix),color = c('grey','red',main='Confusion Matrix'))
-plot(ROC_perf,colorize=TRUE,print.cutoffs.at=seq(0.1,by=0.1),main='Patient4 ROC')
+fourfoldplot(as.table(confusion_matrix),color = c('grey','red'),main='Peripheral=0 GBM=1')
+plot.roc(actuals, predicted, percent = TRUE, main = 'GBM_pt4_ROC', add =  FALSE, asp = NA, print.auc = TRUE)
 #---------- Figure 4i
 VlnPlot(data, features = c('DDX58','IFIH1','NFKB1'),cols = c('red','grey'))
 FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('DDX58','IFIH1','NFKB1'))

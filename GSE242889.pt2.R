@@ -9,7 +9,7 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd(2NT_P24)
+setwd('2NT_P24')
 features_path <- 'genes.tsv'
 barcodes_path <- 'barcodes.tsv'
 matrix_path <- 'matrix.mtx'
@@ -17,7 +17,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 x <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'adjacent')
 summary(x@active.ident)
 #---------------------------------------------------------------------------
-setwd(2T_C24)
+setwd('2T_C24')
 features_path <- 'genes.tsv'
 barcodes_path <- 'barcodes.tsv'
 matrix_path <- 'matrix.mtx'
@@ -147,10 +147,7 @@ optCutoff<-optimalCutoff(actuals = actuals,
                          returnDiagnostics = TRUE)
 head(optCutoff)
 auc(actuals,predicted)
-str(df$predicted)
-ROC_pred<-prediction(df$predicted,df$actuals)
-ROC_perf<-performance(ROC_pred,'tpr','fpr')
-plot(ROC_perf,colorize=TRUE,print.cutoffs.at=seq(0.1,by=0.1))
+plot.roc(actuals, predicted, percent = TRUE, main = 'Validation_ROC', add =  FALSE, asp = NA, print.auc = TRUE)
 summary(model)
 logLik(model)
 confusion_matrix
@@ -158,11 +155,11 @@ table(data@meta.data$orig.ident)
 table(test$ident)
 break 
 #-------Figure 6d
-VlnPlot(data, features = c('HP','GPNMB','HRG'),cols = c('grey','red'))
+VlnPlot(data, features = c('HP','GPNMB','HRG'),cols = c('grey','skyblue'))
 FindMarkers(data, ident.1 = 'HCC', ident.2 = 'adjacent', features = c('HP','GPNMB','HRG'))
 #-------Figure 6e
-fourfoldplot(as.table(confusion_matrix),color = c('grey','red',main='Confusion Matrix'))
-plot(ROC_perf,colorize=TRUE,print.cutoffs.at=seq(0.1,by=0.1),main='Patient2 ROC')
+fourfoldplot(as.table(confusion_matrix),color = c('grey','skyblue'),main='Adjacent=0 HCC=1')
+plot.roc(actuals, predicted, percent = TRUE, main = 'HCC_pt2__ROC', add =  FALSE, asp = NA, print.auc = TRUE)
 #------Figure 6f
-VlnPlot(data, features = c('DDX58','IFIH1','NFKB1'),cols = c('grey','red'))
+VlnPlot(data, features = c('DDX58','IFIH1','NFKB1'),cols = c('grey','skyblue'))
 FindMarkers(data, ident.1 = 'HCC', ident.2 = 'adjacent', features = c('DDX58','IFIH1','NFKB1'))

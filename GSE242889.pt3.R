@@ -120,11 +120,6 @@ vif(model)
 summary(model)
 varImp(model)
 logLik(model)
-#----------Mcfadden's pseudo R squared
-null<-model$null.deviance/-2
-resdDEV<-model$deviance/-2
-pR2<-(null-resdDEV)/null
-print(pR2)
 #------Displaying variance inflation factors
 vif(model)
 #------Displaying variable importance factors

@@ -161,7 +161,7 @@ break
 VlnPlot(data, features = c('HP','GPNMB','HRG'),cols = c('grey','skyblue'))
 FindMarkers(data, ident.1 = 'HCC', ident.2 = 'adjacent', features = c('HP','GPNMB','HRG'))
 #-------Figure 6b
-fourfoldplot(as.table(confusion_matrix),color = c('grey','skyblue',main='Adjacent=0 HCC=1'))
+fourfoldplot(as.table(confusion_matrix),color = c('grey','skyblue'),main='Adjacent=0 HCC=1')
 plot.roc(actuals, predicted, percent = TRUE, main = 'HCC_pt1__ROC', add =  FALSE, asp = NA, print.auc = TRUE)
 #------Figure 6c
 VlnPlot(data, features = c('DDX58','IFIH1','NFKB1'),cols = c('grey','skyblue'))

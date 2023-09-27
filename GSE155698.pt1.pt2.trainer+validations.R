@@ -252,7 +252,7 @@ VlnPlot(data, features = c('ANPEP','CD36','IFIT1'),cols = c('grey','orange'))
 FindMarkers(data, ident.1 = 'PDAC', ident.2 = 'adjacent', features = c('ANPEP','CD36','IFIT1'))
 #----Figure ?
 fourfoldplot(as.table(confusion_matrix),color = c('grey','orange'),main='adjacent=0 PDAC=1')
-plot.roc(actuals, predicted, percent = TRUE, main = 'Validation_ROC', add =  FALSE, asp = NA, print.auc = TRUE)
+plot.roc(actuals, predicted, percent = TRUE, main = 'PDAC_validation_ROC', add =  FALSE, asp = NA, print.auc = TRUE)
 #----Figure ?
 VlnPlot(data, features = c('DDX58','IFIH1','NFKB1'),cols = c('grey','orange'))
 FindMarkers(data, ident.1 = 'PDAC', ident.2 = 'adjacent', features = c('DDX58','IFIH1','NFKB1'))

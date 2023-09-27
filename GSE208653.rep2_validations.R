@@ -158,7 +158,7 @@ VlnPlot(data, features = c('CXCL9','IFI6','SLC40A1'),cols = c('green','grey','gr
 FindMarkers(data, ident.1 = 'cervical_cancer', ident.2 = 'hpv', features = c('CXCL9','IFI6','SLC40A1'))
 #------Figure ?
 fourfoldplot(as.table(confusion_matrix),color = c('grey','green'),main='non-tumor=0 cervical_cancer=1')
-plot.roc(actuals, predicted, percent = TRUE, main = 'Validation_ROC', add =  FALSE, asp = NA, print.auc = TRUE)
+plot.roc(actuals, predicted, percent = TRUE, main = 'cervical_cancer_validation_ROC', add =  FALSE, asp = NA, print.auc = TRUE)
 #------Figure ?
 VlnPlot(data, features = c('DDX58','IFIH1','NFKB1'),cols = c('green','grey','grey'))
 FindMarkers(data, ident.1 = 'cervical_cancer', ident.2 = 'hpv', features = c('DDX58','IFIH1','NFKB1'))

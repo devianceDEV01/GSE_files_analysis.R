@@ -103,7 +103,7 @@ gc()
 table(data@meta.data$orig.ident)
 VlnPlot(data, features = c('PTPRC','TRAC','CD19','CD14','MILR1'),cols = c())
 #----------------------------------------------------------------
-reg<-FetchData(data,vars = c('ident','CXCL9','IFI6','SLC40A1',slot = 'counts'))
+reg<-FetchData(data,vars = c('ident','CXCL9','IFI6','SLC40A1','MRC1',slot = 'counts'))
 table(reg$ident)
 reg$ident<-ifelse(reg$ident=='cervical_cancer', 1, 0)
 table(reg$ident)
@@ -112,7 +112,7 @@ table(edit$ident)
 reg<-edit[sample(1:nrow(edit)),]
 table(reg$ident)
 #----------run model
-model<-glm(ident~CXCL9+IFI6+SLC40A1,data = reg, family = binomial)
+model<-glm(ident~CXCL9+IFI6+SLC40A1+MRC1,data = reg, family = binomial)
 summary(model)
 vif(model)
 varImp(model)
@@ -121,3 +121,6 @@ logLik(model)
 setwd()
 write_rds(model,file = 'cc_model.rda')
 break 
+#---Figure 5a
+VlnPlot(data, features = c('MRC1','CXCL9','IFI6','SLC40A1'),cols = c('orange','grey','grey'))
+FindMarkers(data, ident.1 = 'cervical_cancer', ident.2 = 'hpv', features = c('CXCL9','IFI6','SLC40A1','MRC1'))

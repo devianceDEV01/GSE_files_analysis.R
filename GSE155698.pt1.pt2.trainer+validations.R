@@ -111,7 +111,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 y <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'PDAC')
 summary(y@active.ident)
 #---------------------------------------------------------------------------
-data<-merge(x,y=c(y),project='PDAC')
+data<-merge(x,y=c(y),project='')
 table(data@meta.data$orig.ident)
 head(data@active.ident)
 rm(x,y)
@@ -247,12 +247,10 @@ confusion_matrix
 table(data@meta.data$orig.ident)
 table(test$ident)
 break 
-#----Figure ?
-VlnPlot(data, features = c('ANPEP','CD36','IFIT1'),cols = c('grey','orange'))
+#----Figure 4a
+VlnPlot(data, features = c('ANPEP','CD36','IFIT1'),cols = c('grey','green'))
 FindMarkers(data, ident.1 = 'PDAC', ident.2 = 'adjacent', features = c('ANPEP','CD36','IFIT1'))
-#----Figure ?
-fourfoldplot(as.table(confusion_matrix),color = c('grey','orange'),main='adjacent=0 PDAC=1')
+#----Figure 4b
+fourfoldplot(as.table(confusion_matrix),color = c('grey','green'),main='adjacent=0 PDAC=1')
 plot.roc(actuals, predicted, percent = TRUE, main = 'PDAC_validation_ROC', add =  FALSE, asp = NA, print.auc = TRUE)
-#----Figure ?
-VlnPlot(data, features = c('DDX58','IFIH1','NFKB1'),cols = c('grey','orange'))
-FindMarkers(data, ident.1 = 'PDAC', ident.2 = 'adjacent', features = c('DDX58','IFIH1','NFKB1'))
+

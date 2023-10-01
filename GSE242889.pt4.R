@@ -101,7 +101,7 @@ summary(model)
 logLik(model)
 #------Displaying variance inflation factors
 vif(model)
-#------Displaying variable importance factors
+#------Displaying variable importances
 varImp(model)
 newdata = test
 summary(newdata)

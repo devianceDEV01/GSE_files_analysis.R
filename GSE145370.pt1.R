@@ -33,7 +33,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 a3 <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'adjacent')
 table(a3@meta.data$orig.ident)
 #-------------------------------------------------------------------------------
-setwd('/home/amp_prog/Desktop/drive_sept2023/models/GSE145370_ESCC/P4.A')
+setwd('P4.A')
 barcodes_path <- 'barcodes.tsv.gz'
 features_path <- 'features.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'

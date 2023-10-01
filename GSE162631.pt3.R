@@ -9,7 +9,7 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd(R3_N')
+setwd('R3_N')
 features_path <- 'features.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
@@ -17,7 +17,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 x <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'peripheral')
 summary(x@active.ident)
 #---------------------------------------------------------------------------
-setwd(R3_T')
+setwd('R3_T')
 features_path <- 'features.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
@@ -45,53 +45,36 @@ plot1 <- VariableFeaturePlot(data)
 plot1
 all.genes <- rownames(data)
 all.genes
-data <- ScaleData(data, features = all.genes)
-gc()
-dim(data)
-data <- RunPCA(data, features = VariableFeatures(object = data))
-DimHeatmap(data, dims = 1:15, cells = 500, balanced = T)
-ElbowPlot(data)
-gc()
 table(data@meta.data$orig.ident)
 rm(matrix)
 gc()
 #----------Isolate CD45+  -------------------------------------
 data$CD45.groups <- 'CD45.pos'
 data$CD45.groups[WhichCells(data, expression= PTPRC < 0.1)] <- 'CD45.neg'
-DimPlot(data, reduction = 'pca',split.by = 'CD45.groups')
-head(data@meta.data)
 data <- subset(data, subset = CD45.groups != "CD45.neg")
 gc()
 table(data@meta.data$orig.ident)
 #-------------CD45+ CD19-  ---------------------------------------------------------
 data$CD19.groups <- 'CD19.pos'
 data$CD19.groups[WhichCells(data, expression= CD19 < 0.1)] <- 'CD19.neg'
-DimPlot(data, reduction = 'pca',split.by = 'CD19.groups')
-head(data@meta.data)
 data <- subset(data, subset = CD19.groups != "CD19.pos")
 gc()
 table(data@meta.data$orig.ident)
 #-------------CD45+ CD19- TRAC- -------------------------------------------
 data$TRAC.groups <- 'TRAC.pos'
 data$TRAC.groups[WhichCells(data, expression= TRAC < 0.1)] <- 'TRAC.neg'
-DimPlot(data, reduction = 'pca',split.by = 'TRAC.groups')
-head(data@meta.data)
 data <- subset(data, subset = TRAC.groups != "TRAC.pos")
 gc()
 table(data@meta.data$orig.ident)
 #-------------CD45+ CD19- TRAC- CD14+     -------------------------------------------
 data$CD14.groups <- 'CD14.pos'
 data$CD14.groups[WhichCells(data, expression= CD14 < 0.1)] <- 'CD14.neg'
-DimPlot(data, reduction = 'pca',split.by = 'CD14.groups')
-head(data@meta.data)
 data <- subset(data, subset = CD14.groups != "CD14.neg")
 gc()
 table(data@meta.data$orig.ident)
 #----------Isolate MILR1+  -------------------------------------
 data$MILR1.groups <- 'MILR1.pos'
 data$MILR1.groups[WhichCells(data, expression= MILR1 < 0.1)] <- 'MILR1.neg'
-DimPlot(data, reduction = 'pca',split.by = 'MILR1.groups')
-head(data@meta.data)
 data <- subset(data, subset = MILR1.groups != "MILR1.neg")
 gc()
 table(data@meta.data$orig.ident)
@@ -151,12 +134,9 @@ confusion_matrix
 table(data@meta.data$orig.ident)
 table(test$ident)
 break 
-#----------- Figure 4d
+#----------- Figure 2c
 VlnPlot(data, features = c('CD163','LYZ','S100A8'),cols = c('red','grey'))
 FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('CD163','LYZ','S100A8'))
-#----------- Figure 4e
+#----------- Figure 2d
 fourfoldplot(as.table(confusion_matrix),color = c('grey','red'),main='Peripheral=0 GBM=1')
 plot.roc(actuals, predicted, percent = TRUE, main = 'GBM_pt3_ROC', add =  FALSE, asp = NA, print.auc = TRUE)
-#---------- Figure 4f
-VlnPlot(data, features = c('DDX58','IFIH1','NFKB1'),cols = c('red','grey'))
-FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('DDX58','IFIH1','NFKB1'))

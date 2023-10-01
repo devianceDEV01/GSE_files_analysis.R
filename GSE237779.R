@@ -19,10 +19,10 @@ data <- subset(data, subset = CD45.groups != "CD45.neg")
 gc()
 VlnPlot(data,features = 'PTPRC')
 Idents(data)<-data@meta.data$integrated_celltype
-#----  Figure 3a
+#----  Figure 1a
 VlnPlot(data, features = c('MILR1'),pt.size=0.1,cols = c('red','grey','grey','grey','grey','grey','grey','grey','red','grey','grey','grey','grey','grey','grey','grey','grey','grey','red'))
 FindMarkers(data, ident.1 = 'Macrophage', ident.2 = 'CD4+ Tcm', features = c('MILR1'))
-#----- Figure 3b
+#----- Figure 1b
 VlnPlot(data, features = c('MRC1'),pt.size=0.1,cols = c('red','grey','grey','grey','grey','grey','grey','grey','red','grey','grey','grey','grey','grey','grey','grey','grey','grey','red'))
 FindMarkers(data, ident.1 = 'Macrophage', ident.2 = 'CD4+ Tcm', features = c('MRC1'))
 

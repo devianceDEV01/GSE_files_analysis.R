@@ -9,23 +9,21 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd('2NT_P24')
+setwd('/home/em_b/Desktop/scRNAseq_manuscript/Fig.3/GSE242889_RAW/2NT_P24')
 features_path <- 'genes.tsv'
 barcodes_path <- 'barcodes.tsv'
 matrix_path <- 'matrix.mtx'
 matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_path)
 x <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'adjacent')
 summary(x@active.ident)
-#---------------------------------------------------------------------------
-setwd('2T_C24')
+setwd('/home/em_b/Desktop/scRNAseq_manuscript/Fig.3/GSE242889_RAW/2T_C24')
 features_path <- 'genes.tsv'
 barcodes_path <- 'barcodes.tsv'
 matrix_path <- 'matrix.mtx'
 matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_path)
 y <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'HCC')
 summary(y@active.ident)
-#---------------------------------------------------------------------------
-data<-merge(x,y=c(y),project='')
+data<-merge(x,y=c(y),project='patient_2')
 table(data@meta.data$orig.ident)
 head(data@active.ident)
 rm(x,y)
@@ -48,58 +46,47 @@ all.genes
 table(data@meta.data$orig.ident)
 rm(matrix)
 gc()
-#----------Isolate CD45+  -------------------------------------
 data$CD45.groups <- 'CD45.pos'
 data$CD45.groups[WhichCells(data, expression= PTPRC < 0.1)] <- 'CD45.neg'
 data <- subset(data, subset = CD45.groups != "CD45.neg")
 gc()
 table(data@meta.data$orig.ident)
-#-------------CD45+ CD19-  ---------------------------------------------------------
 data$CD19.groups <- 'CD19.pos'
 data$CD19.groups[WhichCells(data, expression= CD19 < 0.1)] <- 'CD19.neg'
 data <- subset(data, subset = CD19.groups != "CD19.pos")
 gc()
 table(data@meta.data$orig.ident)
-#-------------CD45+ CD19- TRAC- -------------------------------------------
 data$TRAC.groups <- 'TRAC.pos'
 data$TRAC.groups[WhichCells(data, expression= TRAC < 0.1)] <- 'TRAC.neg'
 data <- subset(data, subset = TRAC.groups != "TRAC.pos")
 gc()
 table(data@meta.data$orig.ident)
-#-------------CD45+ CD19- TRAC- CD14+     -------------------------------------------
 data$CD14.groups <- 'CD14.pos'
 data$CD14.groups[WhichCells(data, expression= CD14 < 0.1)] <- 'CD14.neg'
 data <- subset(data, subset = CD14.groups != "CD14.neg")
 gc()
 table(data@meta.data$orig.ident)
-#----------Isolate MILR1+  -------------------------------------
 data$MILR1.groups <- 'MILR1.pos'
 data$MILR1.groups[WhichCells(data, expression= MILR1 < 0.1)] <- 'MILR1.neg'
 data <- subset(data, subset = MILR1.groups != "MILR1.neg")
 gc()
 table(data@meta.data$orig.ident)
-VlnPlot(data, features = c('MILR1'),cols = c())
+VlnPlot(data, features = c('MILR1','PTPRC','CD19','TRAC','CD14'),cols = c())
 table(data@meta.data$orig.ident)
-#----split data
 reg<-FetchData(data,vars = c('ident','HP','GPNMB','HRG'),slot = 'counts')
 table(reg$ident)
 reg$ident<-ifelse(reg$ident=='HCC', 1, 0)
 table(reg$ident)
-#------Even out group numbers and shuffle
 edit<-reg[-c(1:30),]
 table(edit$ident)
 reg<-edit[sample(1:nrow(edit)),]
 table(reg$ident)
 test<-reg
-#--------------------------------------------------
 set.seed(14)
-setwd()
-model<-read_rds('hcc.pt5_model.rda')
+model<-read_rds('/home/em_b/Desktop/scRNAseq_manuscript/models/GSE242889_hcc_pt5_training.rda')
 summary(model)
 logLik(model)
-#------Displaying variance inflation factors
 vif(model)
-#------Displaying variable importances
 varImp(model)
 newdata = test
 summary(newdata)
@@ -132,10 +119,31 @@ logLik(model)
 confusion_matrix
 table(data@meta.data$orig.ident)
 table(test$ident)
-break 
-#-------Figure 3c
+data<-JoinLayers(data)
+#-------Figure 3e
 VlnPlot(data, features = c('HP','GPNMB','HRG'),cols = c('grey','skyblue'))
-FindMarkers(data, ident.1 = 'HCC', ident.2 = 'adjacent', features = c('HP','GPNMB','HRG'))
-#-------Figure 3d
-fourfoldplot(as.table(confusion_matrix),color = c('grey','skyblue'),main='Adjacent=0 HCC=1')
-plot.roc(actuals, predicted, percent = TRUE, main = 'HCC_pt2__ROC', add =  FALSE, asp = NA, print.auc = TRUE)
+FindMarkers(data, ident.1 = 'HCC', ident.2 = 'adjacent', features = c('HP','GPNMB','HRG'),
+            test.use='bimod')
+#-------Figure 3f
+fourfoldplot(as.table(confusion_matrix),
+             color = c('orange','skyblue'),
+             std='all.max',
+             main='Adjacent=0 HCC=1')
+plot.roc(actuals, predicted,
+         percent = TRUE,
+         main = 'HCC patient 2 Area Under the ROC curve',
+         add =  FALSE,
+         asp = NA,
+         print.auc = TRUE,
+         print.auc.col='red',
+         print.auc.cex=1,
+         grid=TRUE,
+         grid.col='skyblue',
+         identity.col='blue',
+         identity.lty=8,
+         col='red',
+         print.thres=TRUE,
+         print.thres.pch=1,
+         print.thres.col='black',
+         ci=TRUE)
+

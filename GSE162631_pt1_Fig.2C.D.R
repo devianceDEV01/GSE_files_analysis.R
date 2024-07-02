@@ -9,27 +9,23 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd('R1_N')
+setwd('/home/em_b/Desktop/scRNAseq_manuscript/Fig.2A/R1_N')
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
 matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_path)
 x <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'peripheral')
 summary(x@active.ident)
-#---------------------------------------------------------------------------
-setwd('R1_T')
+setwd('/home/em_b/Desktop/scRNAseq_manuscript/Fig.2A/R1_T')
 features_path <- 'genes.tsv.gz'
 barcodes_path <- 'barcodes.tsv.gz'
 matrix_path <- 'matrix.mtx.gz'
 matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_path)
 y <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'GBM')
 summary(y@active.ident)
-#---------------------------------------------------------------------------
 data<-merge(x,y=c(y),project='GBM.pt1')
 table(data@meta.data$orig.ident)
 head(data@active.ident)
-rm(x,y)
-gc()
 data[["percent.mt"]] <- PercentageFeatureSet(data, pattern = "^MT-")
 VlnPlot(data, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol=3)
 data <- subset(data, subset = nFeature_RNA > 200 & nFeature_RNA < 10000 & percent.mt <25)
@@ -46,59 +42,43 @@ plot1
 all.genes <- rownames(data)
 all.genes
 table(data@meta.data$orig.ident)
-rm(matrix)
 gc()
-#----------Isolate CD45+  -------------------------------------
 data$CD45.groups <- 'CD45.pos'
 data$CD45.groups[WhichCells(data, expression= PTPRC < 0.1)] <- 'CD45.neg'
 data <- subset(data, subset = CD45.groups != "CD45.neg")
 gc()
 table(data@meta.data$orig.ident)
-#-------------CD45+ CD19-  ---------------------------------------------------------
 data$CD19.groups <- 'CD19.pos'
 data$CD19.groups[WhichCells(data, expression= CD19 < 0.1)] <- 'CD19.neg'
 data <- subset(data, subset = CD19.groups != "CD19.pos")
 gc()
 table(data@meta.data$orig.ident)
-#-------------CD45+ CD19- TRAC- -------------------------------------------
-data$TRAC.groups <- 'TRAC.pos'
-data$TRAC.groups[WhichCells(data, expression= TRAC < 0.1)] <- 'TRAC.neg'
-data <- subset(data, subset = TRAC.groups != "TRAC.pos")
-gc()
-table(data@meta.data$orig.ident)
-#-------------CD45+ CD19- TRAC- CD14+     -------------------------------------------
 data$CD14.groups <- 'CD14.pos'
 data$CD14.groups[WhichCells(data, expression= CD14 < 0.1)] <- 'CD14.neg'
 data <- subset(data, subset = CD14.groups != "CD14.neg")
 gc()
 table(data@meta.data$orig.ident)
-#----------Isolate MILR1+  -------------------------------------
 data$MILR1.groups <- 'MILR1.pos'
 data$MILR1.groups[WhichCells(data, expression= MILR1 < 0.1)] <- 'MILR1.neg'
 data <- subset(data, subset = MILR1.groups != "MILR1.neg")
 gc()
 table(data@meta.data$orig.ident)
-VlnPlot(data, features = c('MILR1'),cols = c())
+VlnPlot(data, features = c('MILR1','PTPRC','CD19','CD14'),cols = c())
 set.seed(13)
-#----split data
 reg<-FetchData(data,vars = c('ident','CD163','LYZ','S100A8'),slot = 'counts')
 table(reg$ident)
 reg$ident<-ifelse(reg$ident=='GBM', 1, 0)
 table(reg$ident)
-#------Even out group numbers and shuffle
-edit<-reg[-c(4091:4996),]
+edit<-reg[-c(4081:4996),]
 table(edit$ident)
 reg<-edit[sample(1:nrow(edit)),]
 table(reg$ident)
 test<-reg
-#---------------------------------------------------------------------------
-setwd()
-model<-read_rds('gbm_pt2_training.rda')
+setwd('/home/em_b/Desktop/scRNAseq_manuscript/models')
+model<-read_rds('GSE162631_gbm_pt2_training.rda')
 summary(model)
 logLik(model)
-#------Displaying variance inflation factors
 vif(model)
-#------Displaying variable importances
 varImp(model)
 newdata = test
 summary(newdata)
@@ -131,12 +111,32 @@ logLik(model)
 confusion_matrix
 table(data@meta.data$orig.ident)
 table(test$ident)
-break 
-#----------- Figure 2a
-VlnPlot(data, features = c('CD163','LYZ','S100A8'),cols = c('red','grey'))
-FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('CD163','LYZ','S100A8'))
-#----------- Figure 2b
-fourfoldplot(as.table(confusion_matrix),color = c('grey','red'),main='Peripheral=0 GBM=1')
-plot.roc(actuals, predicted, percent = TRUE, main = 'GBM_pt1_ROC', add =  FALSE, asp = NA, print.auc = TRUE)
+data<-JoinLayers(data)
+#----------- Figure 2c
+VlnPlot(data, features = c('CD163','LYZ','S100A8'),cols = c('grey','red'))
+FindMarkers(data, ident.1 = 'GBM', ident.2 = 'peripheral', features = c('CD163','LYZ','S100A8'),
+            test.use='bimod')
+#----------- Figure 2d
+fourfoldplot(as.table(confusion_matrix),
+             color = c('skyblue','red'),
+             std='all.max',
+             main='Peripheral=0 GBM=1')
+plot.roc(actuals, predicted,
+         percent = TRUE,
+         main = 'GBM patient 1 Area Under the ROC curve',
+         add =  FALSE,
+         asp = NA,
+         print.auc = TRUE,
+         print.auc.col='red',
+         print.auc.cex=1,
+         grid=TRUE,
+         grid.col='skyblue',
+         identity.col='blue',
+         identity.lty=8,
+         col='red',
+         print.thres=TRUE,
+         print.thres.pch=5,
+         print.thres.col='black',
+         ci=TRUE)
 
 

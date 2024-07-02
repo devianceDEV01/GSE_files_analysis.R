@@ -9,7 +9,7 @@ library(caret)
 library(InformationValue)
 library(pROC)
 library(ROCR)
-setwd('5NT_P36')
+setwd('/home/em_b/Desktop/scRNAseq_manuscript/Fig.3/GSE242889_RAW/5NT_P36')
 features_path <- 'genes.tsv'
 barcodes_path <- 'barcodes.tsv'
 matrix_path <- 'matrix.mtx'
@@ -17,7 +17,7 @@ matrix <- ReadMtx(mtx= matrix_path, features = features_path, cells= barcodes_pa
 x <- CreateSeuratObject(counts=matrix,min.cells=20,min.features=200,project = 'adjacent')
 summary(x@active.ident)
 #---------------------------------------------------------------------------
-setwd('5T_C36')
+setwd('/home/em_b/Desktop/scRNAseq_manuscript/Fig.3/GSE242889_RAW/5T_C36')
 features_path <- 'genes.tsv'
 barcodes_path <- 'barcodes.tsv'
 matrix_path <- 'matrix.mtx'
@@ -48,7 +48,6 @@ all.genes
 table(data@meta.data$orig.ident)
 rm(matrix)
 gc()
-VlnPlot(data, features = c('PTPRC','CD19','TRAC','CD14','MILR1'),cols = c('red','grey'))
 #----------Isolate CD45+  -------------------------------------
 data$CD45.groups <- 'CD45.pos'
 data$CD45.groups[WhichCells(data, expression= PTPRC < 0.1)] <- 'CD45.neg'
@@ -79,7 +78,7 @@ data$MILR1.groups[WhichCells(data, expression= MILR1 < 0.1)] <- 'MILR1.neg'
 data <- subset(data, subset = MILR1.groups != "MILR1.neg")
 gc()
 table(data@meta.data$orig.ident)
-VlnPlot(data, features = c('MILR1'),cols = c())
+VlnPlot(data, features = c('PTPRC','CD19','TRAC','CD14','MILR1'),cols = c('red','grey'))
 table(data@meta.data$orig.ident)
 #----split data
 reg<-FetchData(data,vars = c('ident','HP','GPNMB','HRG'),slot = 'counts')
@@ -96,10 +95,30 @@ train<-reg
 set.seed(14)
 #----------run model
 model<-glm(ident~HP+GPNMB+HRG,data = train, family = binomial)
-vif(model)
 summary(model)
+HP_estimate<-0.65566
+HP_StdError<-0.13524
+zvalue<-HP_estimate/HP_StdError
+wald_value<-pnorm(zvalue)
+HP_pvalue<-(1-wald_value)*2
+HP_pvalue
+#-------------------------------------------------------------------------------
+GPNMB_estimate<-0.04913
+GPNMB_StdError<-0.01272
+zvalue<-GPNMB_estimate/GPNMB_StdError
+wald_value<-pnorm(zvalue)
+GPNMB_pvalue<-(1-wald_value)*2
+GPNMB_pvalue
+#-------------------------------------------------------------------------------
+HRG_estimate<-1.25260
+HRG_StdError<-0.44120
+zvalue<-HRG_estimate/HRG_StdError
+wald_value<-pnorm(zvalue)
+HRG_pvalue<-(1-wald_value)*2
+HRG_pvalue
+vif(model)
 varImp(model)
 logLik(model)
 #----------------------------------
-setwd()
-write_rds(model,file='hcc.pt5_model.rda')
+setwd('/home/em_b/Desktop/scRNAseq_manuscript/Fig.3')
+#write_rds(model,file='GSE242889_pt5_model.rda')

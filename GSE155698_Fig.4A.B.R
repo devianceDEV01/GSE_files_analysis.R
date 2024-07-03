@@ -82,7 +82,7 @@ results_df<-data.frame(resLRT)
 results_df<-results_df[order(results_df$padj, decreasing=FALSE),]
 results_df<-subset(results_df,padj< 0.05)
 summary(results_df)
-#---Figure 2A
+#---Figure 4A
 EnhancedVolcano(resLRT,
                 lab = row.names(resLRT),
                 x='log2FoldChange',
